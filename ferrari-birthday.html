@@ -15,18 +15,30 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
 --ferrari-red:#DC0000;--ferrari-dark:#A80000;--gold:#C9A83F;--gold-light:#E8D48B;
---cream:#FAF3E0;--charcoal:#111111;--italian-green:#009246;--italian-white:#F1F1F1;--italian-red:#CE2B37;
+--cream:#FAF3E0;--charcoal:#0a0a0a;--deep:#050505;
+--italian-green:#009246;--italian-white:#F1F1F1;--italian-red:#CE2B37;
+--glass:rgba(255,255,255,.03);--glass-border:rgba(255,255,255,.06);
 }
 html{scroll-behavior:smooth}
 body{
-background:var(--charcoal);color:var(--cream);
+background:var(--deep);color:var(--cream);
 font-family:'Cormorant Garamond',Georgia,serif;
 -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
 overflow-x:hidden;
 }
 
+/* === CUSTOM CURSOR GLOW === */
+.cursor-glow{
+position:fixed;width:400px;height:400px;border-radius:50%;
+background:radial-gradient(circle,rgba(220,0,0,.06) 0%,rgba(201,168,63,.03) 30%,transparent 70%);
+pointer-events:none;z-index:0;
+transform:translate(-50%,-50%);
+transition:left .3s ease-out,top .3s ease-out;
+will-change:left,top;
+}
+
 /* === ITALIAN FLAG BAR (top) === */
-.flag-bar{position:fixed;top:0;left:0;width:100%;height:4px;z-index:1000;display:flex}
+.flag-bar{position:fixed;top:0;left:0;width:100%;height:3px;z-index:1000;display:flex}
 .flag-bar span{flex:1;transform:scaleX(0)}
 .flag-bar span:nth-child(1){background:var(--italian-green);animation:flagIn .5s .3s forwards}
 .flag-bar span:nth-child(2){background:var(--italian-white);animation:flagIn .5s .5s forwards}
@@ -35,8 +47,8 @@ overflow-x:hidden;
 
 /* === SCROLL PROGRESS BAR (bottom) === */
 .scroll-progress{
-position:fixed;bottom:0;left:0;height:3px;width:100%;z-index:1000;
-background:linear-gradient(90deg,var(--italian-green),var(--italian-white) 50%,var(--italian-red));
+position:fixed;bottom:0;left:0;height:2px;width:100%;z-index:1000;
+background:linear-gradient(90deg,var(--ferrari-red),var(--gold));
 transform:scaleX(0);transform-origin:left;
 will-change:transform;pointer-events:none;
 }
@@ -44,216 +56,468 @@ will-change:transform;pointer-events:none;
 /* === GOLD PARTICLES === */
 .particles{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden}
 .particle{
-position:absolute;width:3px;height:3px;border-radius:50%;
+position:absolute;border-radius:50%;
 background:var(--gold);opacity:0;
 animation:particleFloat linear infinite;
 }
 @keyframes particleFloat{
-0%{transform:translateY(110vh) scale(0);opacity:0}
-10%{opacity:.6}
-90%{opacity:.4}
-100%{transform:translateY(-10vh) scale(1);opacity:0}
+0%{transform:translateY(110vh) scale(0) rotate(0deg);opacity:0}
+10%{opacity:.5}
+50%{opacity:.3}
+90%{opacity:.2}
+100%{transform:translateY(-10vh) scale(1) rotate(180deg);opacity:0}
+}
+
+/* === AMBIENT LINES (moving bg) === */
+.ambient-lines{
+position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;opacity:.03;
+}
+.ambient-line{
+position:absolute;width:1px;height:100vh;
+background:linear-gradient(to bottom,transparent,var(--gold),transparent);
+animation:ambientDrift linear infinite;
+}
+@keyframes ambientDrift{
+0%{transform:translateY(-100vh)}
+100%{transform:translateY(100vh)}
 }
 
 /* === INTRO OVERLAY === */
 .intro-overlay{
 position:fixed;inset:0;z-index:2000;
-background:var(--charcoal);
+background:var(--deep);
 display:flex;flex-direction:column;align-items:center;justify-content:center;
-animation:overlayFade .8s 4.2s forwards;
 }
-@keyframes overlayFade{to{opacity:0;pointer-events:none}}
+.intro-overlay.fade-out{
+animation:overlayFade 1.2s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes overlayFade{
+0%{opacity:1;backdrop-filter:blur(0px)}
+50%{backdrop-filter:blur(10px)}
+100%{opacity:0;pointer-events:none}
+}
 .intro-emblem{
-width:120px;height:120px;opacity:0;
-animation:emblemIn .8s .6s cubic-bezier(.16,1,.3,1) forwards;
+width:140px;height:140px;opacity:0;
+animation:emblemIn 1s .6s cubic-bezier(.16,1,.3,1) forwards;
 }
-@keyframes emblemIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes emblemIn{from{transform:scale(.5) rotate(-5deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+.intro-line{
+width:60px;height:1px;margin:1.5rem auto;
+background:linear-gradient(90deg,transparent,var(--gold),transparent);
+opacity:0;animation:lineIn .8s 1.6s forwards;
+}
+@keyframes lineIn{to{opacity:1;width:80px}}
 .intro-title{
-font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.4em;
-color:var(--gold);margin-top:1.5rem;opacity:0;
+font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.5em;
+color:var(--gold);opacity:0;
 animation:slideUp .7s 2s cubic-bezier(.16,1,.3,1) forwards;
 }
 .intro-subtitle{
 font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
-font-size:1.2rem;color:var(--cream);opacity:.7;margin-top:.5rem;opacity:0;
+font-size:1.3rem;color:var(--cream);margin-top:.6rem;opacity:0;
 animation:slideUp .7s 2.8s cubic-bezier(.16,1,.3,1) forwards;
 }
-@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* === MAIN PAGE === */
-.main-page{opacity:0;animation:mainIn .8s 4.8s forwards}
-@keyframes mainIn{to{opacity:1}}
+.main-page{opacity:0;transition:opacity 1s cubic-bezier(.4,0,.2,1)}
+.main-page.visible{opacity:1}
 
 /* === HERO === */
 .hero{
 min-height:100vh;min-height:100dvh;
 display:flex;flex-direction:column;align-items:center;justify-content:center;
 text-align:center;padding:2rem;position:relative;
-background:radial-gradient(ellipse at 50% 40%,rgba(220,0,0,.06) 0%,transparent 60%),
-radial-gradient(ellipse at 90% 80%,rgba(201,168,63,.04) 0%,transparent 50%),
-var(--charcoal);
+background:
+radial-gradient(ellipse at 30% 20%,rgba(220,0,0,.05) 0%,transparent 50%),
+radial-gradient(ellipse at 70% 80%,rgba(201,168,63,.04) 0%,transparent 50%),
+radial-gradient(ellipse at 50% 50%,rgba(10,10,10,1) 0%,var(--deep) 100%);
+overflow:hidden;
+}
+.hero::before{
+content:'';position:absolute;inset:0;
+background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A83F' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+pointer-events:none;
 }
 .hero-badge{
-font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:.35em;
-color:var(--gold);border:1px solid rgba(201,168,63,.3);
-padding:.4em 1.2em;border-radius:2px;margin-bottom:2rem;
+font-family:'Bebas Neue',sans-serif;font-size:.7rem;letter-spacing:.4em;
+color:var(--gold);
+border:1px solid rgba(201,168,63,.2);
+padding:.5em 1.5em;border-radius:2px;margin-bottom:2.5rem;
 opacity:0;animation:slideUp .6s 5.1s cubic-bezier(.16,1,.3,1) forwards;
+backdrop-filter:blur(10px);
+background:rgba(201,168,63,.03);
 }
-.hero-title{margin-bottom:.2rem;opacity:0;animation:slideUp .7s 5.4s cubic-bezier(.16,1,.3,1) forwards}
+.hero-title{margin-bottom:.2rem;opacity:0;animation:heroTitleIn .8s 5.4s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes heroTitleIn{from{transform:translateY(40px) scale(.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
 .hero-title-buon{
-font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(3.5rem,10vw,7rem);
-color:var(--cream);line-height:.95;display:block;
+font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(4rem,12vw,8rem);
+color:var(--cream);line-height:.9;display:block;
+text-shadow:0 0 80px rgba(220,0,0,.15);
 }
 .hero-title-compleanno{
 font-family:'Playfair Display',serif;font-weight:400;font-style:italic;
-font-size:clamp(3rem,9vw,6.5rem);color:var(--ferrari-red);line-height:1;display:block;
+font-size:clamp(3.5rem,10vw,7rem);
+background:linear-gradient(135deg,var(--ferrari-red),#ff2020,var(--ferrari-dark));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+background-clip:text;
+line-height:1;display:block;
+filter:drop-shadow(0 0 40px rgba(220,0,0,.2));
 }
 .hero-divider{
-width:80px;height:2px;margin:1.5rem auto;
+width:100px;height:1px;margin:2rem auto;
 background:linear-gradient(90deg,transparent,var(--gold),transparent);
 opacity:0;animation:slideUp .6s 5.8s cubic-bezier(.16,1,.3,1) forwards;
 }
 .hero-subtitle{
 font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
-font-size:clamp(1rem,2.5vw,1.3rem);color:var(--cream);opacity:0;
+font-size:clamp(1.1rem,2.5vw,1.4rem);color:rgba(250,243,224,.7);opacity:0;
 animation:slideUp .6s 6.2s cubic-bezier(.16,1,.3,1) forwards;
+letter-spacing:.05em;
 }
 .scroll-cue{
-position:absolute;bottom:2rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+position:absolute;bottom:3rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;
 opacity:0;animation:slideUp .6s 6.8s cubic-bezier(.16,1,.3,1) forwards;
 }
-.scroll-cue svg{animation:bounce 2s ease-in-out infinite}
-@keyframes bounce{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(8px);opacity:1}}
+.scroll-cue svg{animation:bounce 2.5s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(10px);opacity:1}}
 .scroll-cue-label{
-font-family:'Bebas Neue',sans-serif;font-size:.65rem;letter-spacing:.3em;color:var(--gold);opacity:.5;
+font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.35em;color:var(--gold);opacity:.4;
 }
 
 /* === SECTIONS (shared) === */
-.section{padding:5rem 1.5rem;display:flex;flex-direction:column;align-items:center;text-align:center}
+.section{
+padding:6rem 1.5rem;
+display:flex;flex-direction:column;align-items:center;text-align:center;
+position:relative;
+}
 .section-label{
-font-family:'Bebas Neue',sans-serif;font-size:.7rem;letter-spacing:.35em;
-color:var(--gold);margin-bottom:2rem;
+font-family:'Bebas Neue',sans-serif;font-size:.65rem;letter-spacing:.4em;
+color:var(--gold);margin-bottom:2.5rem;opacity:.7;
+}
+.section-divider{
+width:40px;height:1px;margin:0 auto 3rem;
+background:linear-gradient(90deg,transparent,rgba(201,168,63,.3),transparent);
 }
 
 /* === SCROLL ANIM === */
-[data-anim]{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+[data-anim]{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
 [data-anim].visible{opacity:1;transform:translateY(0)}
-[data-anim="card"]{transform:perspective(800px) rotateY(-12deg) translateY(20px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
-[data-anim="card"].visible{transform:perspective(800px) rotateY(0) translateY(0)}
+[data-anim="card"]{transform:perspective(1000px) rotateY(-8deg) rotateX(3deg) translateY(30px) scale(.97);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1)}
+[data-anim="card"].visible{transform:perspective(1000px) rotateY(0) rotateX(0) translateY(0) scale(1)}
+[data-anim="scale"]{transform:scale(.9) translateY(20px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+[data-anim="scale"].visible{transform:scale(1) translateY(0)}
+
+/* Stagger children */
+[data-anim-delay="1"]{transition-delay:.1s}
+[data-anim-delay="2"]{transition-delay:.2s}
+[data-anim-delay="3"]{transition-delay:.3s}
 
 /* === GIFT CARD === */
 .gift-card{
-position:relative;width:100%;max-width:500px;aspect-ratio:1.6/1;
-background:linear-gradient(135deg,#1a1a1a 60%,#222);
-border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);
+position:relative;width:100%;max-width:520px;aspect-ratio:1.6/1;
+background:linear-gradient(145deg,#141414 0%,#1a1a1a 50%,#111 100%);
+border-radius:16px;overflow:hidden;
+box-shadow:
+0 25px 80px rgba(0,0,0,.6),
+0 0 0 1px rgba(201,168,63,.08),
+inset 0 1px 0 rgba(255,255,255,.03);
+transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s cubic-bezier(.16,1,.3,1);
 }
-@media(hover:hover){.gift-card:hover{transform:translateY(-6px);box-shadow:0 28px 70px rgba(0,0,0,.6);transition:transform .3s,box-shadow .3s}}
+@media(hover:hover){.gift-card:hover{
+transform:translateY(-8px) rotateX(2deg);
+box-shadow:0 35px 90px rgba(0,0,0,.7),0 0 0 1px rgba(201,168,63,.12),0 0 60px rgba(220,0,0,.05),inset 0 1px 0 rgba(255,255,255,.05);
+}}
 .gift-card-stripe{
 position:absolute;right:0;top:0;bottom:0;width:38%;
 background:linear-gradient(160deg,var(--ferrari-red),var(--ferrari-dark));
 clip-path:polygon(25% 0,100% 0,100% 100%,0 100%);
 }
-.gift-card-watermark{position:absolute;right:8%;top:50%;transform:translateY(-50%);width:80px;height:80px;opacity:.1}
+.gift-card-stripe::after{
+content:'';position:absolute;inset:0;
+background:linear-gradient(180deg,rgba(255,255,255,.1) 0%,transparent 50%,rgba(0,0,0,.2) 100%);
+}
+.gift-card-watermark{position:absolute;right:8%;top:50%;transform:translateY(-50%);width:90px;height:90px;opacity:.08}
 .gift-card-tricolor{
-position:absolute;top:16px;left:20px;display:flex;height:3px;width:36px;border-radius:1px;overflow:hidden;
+position:absolute;top:18px;left:22px;display:flex;height:3px;width:40px;border-radius:2px;overflow:hidden;
 }
 .gift-card-tricolor span{flex:1}
 .gift-card-tricolor span:nth-child(1){background:var(--italian-green)}
 .gift-card-tricolor span:nth-child(2){background:var(--italian-white)}
 .gift-card-tricolor span:nth-child(3){background:var(--italian-red)}
 .gift-card-brand{
-position:absolute;top:16px;right:20px;
-font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.25em;
-color:rgba(255,255,255,.5);
+position:absolute;top:18px;right:22px;
+font-family:'Bebas Neue',sans-serif;font-size:.45rem;letter-spacing:.3em;
+color:rgba(255,255,255,.4);
 }
 .gift-card-label{
-position:absolute;left:20px;bottom:52px;
+position:absolute;left:22px;bottom:56px;
 font-family:'Cormorant Garamond',serif;font-size:.7rem;font-weight:300;
-color:rgba(255,255,255,.4);letter-spacing:.05em;
+color:rgba(255,255,255,.35);letter-spacing:.08em;
 }
 .gift-card-name{
-position:absolute;left:20px;bottom:24px;
-font-family:'Playfair Display',serif;font-weight:700;font-size:1.3rem;
-color:var(--cream);
+position:absolute;left:22px;bottom:26px;
+font-family:'Playfair Display',serif;font-weight:700;font-size:1.4rem;
+color:var(--cream);letter-spacing:.02em;
 }
-.gift-card-flag-icon{position:absolute;left:20px;bottom:60px;display:none}
-.gift-card-check{position:absolute;bottom:20px;left:20px;width:28px;height:28px;opacity:.25}
+.gift-card-check{position:absolute;bottom:22px;left:22px;width:28px;height:28px;opacity:.2}
 .gift-card-type{
-position:absolute;bottom:24px;right:20px;
+position:absolute;bottom:28px;right:22px;
 font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
-font-size:.9rem;color:rgba(255,255,255,.7);
+font-size:.9rem;color:rgba(255,255,255,.6);
 }
+/* Holographic shimmer on card */
+.gift-card::after{
+content:'';position:absolute;inset:0;
+background:linear-gradient(105deg,transparent 40%,rgba(201,168,63,.03) 45%,rgba(255,255,255,.04) 50%,rgba(201,168,63,.03) 55%,transparent 60%);
+background-size:200% 200%;
+animation:cardShimmer 4s ease-in-out infinite;
+pointer-events:none;
+}
+@keyframes cardShimmer{0%{background-position:200% 50%}100%{background-position:-200% 50%}}
 
 /* === VIDEO === */
+.video-section{
+background:
+radial-gradient(ellipse at 50% 0%,rgba(220,0,0,.03) 0%,transparent 60%),
+transparent;
+}
 .video-wrap{
-width:100%;max-width:720px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;
-box-shadow:0 16px 50px rgba(0,0,0,.5);
+width:100%;max-width:760px;aspect-ratio:16/9;border-radius:16px;overflow:hidden;
+box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px var(--glass-border);
+position:relative;
+}
+.video-wrap::before{
+content:'';position:absolute;inset:-1px;border-radius:17px;
+background:linear-gradient(135deg,rgba(201,168,63,.15),transparent 50%,rgba(220,0,0,.1));
+z-index:-1;
 }
 .video-wrap iframe{width:100%;height:100%;border:none}
 
 /* === MESSAGE === */
+.message-section{
+padding:8rem 1.5rem;
+background:
+radial-gradient(ellipse at 50% 50%,rgba(201,168,63,.02) 0%,transparent 70%);
+}
+.message-quote{
+position:relative;padding:0 2rem;
+}
+.message-quote::before{
+content:'\201C';position:absolute;top:-1.5rem;left:0;
+font-family:'Playfair Display',serif;font-size:4rem;
+color:var(--gold);opacity:.15;line-height:1;
+}
 .message-text{
 font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
-font-size:clamp(1.1rem,2.5vw,1.4rem);line-height:1.8;max-width:540px;
-color:var(--cream);
+font-size:clamp(1.2rem,2.8vw,1.5rem);line-height:2;max-width:560px;
+color:rgba(250,243,224,.85);
 }
-.message-text .red{color:var(--ferrari-red);font-weight:600}
-.message-text .gold{color:var(--gold);font-weight:600}
+.message-text .red{
+color:var(--ferrari-red);font-weight:600;
+text-shadow:0 0 20px rgba(220,0,0,.2);
+}
+.message-text .gold{
+color:var(--gold);font-weight:600;
+text-shadow:0 0 20px rgba(201,168,63,.2);
+}
 
 /* === CODE BOX === */
+.code-section{
+padding:6rem 1.5rem 8rem;
+background:
+radial-gradient(ellipse at 50% 100%,rgba(220,0,0,.03) 0%,transparent 60%);
+}
 .code-box{
-border:1px solid rgba(201,168,63,.2);border-radius:8px;padding:2rem 2.5rem;
-max-width:420px;width:100%;
+border:1px solid rgba(201,168,63,.12);border-radius:16px;
+padding:2.5rem 3rem;max-width:450px;width:100%;
+background:linear-gradient(145deg,rgba(20,20,20,.8),rgba(15,15,15,.9));
+backdrop-filter:blur(20px);
+box-shadow:0 20px 60px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.03);
+position:relative;overflow:hidden;
+}
+.code-box::before{
+content:'';position:absolute;top:0;left:0;right:0;height:1px;
+background:linear-gradient(90deg,transparent,rgba(201,168,63,.2),transparent);
 }
 .code-box-label{
-font-family:'Bebas Neue',sans-serif;font-size:.65rem;letter-spacing:.3em;
-color:var(--gold);margin-bottom:1rem;opacity:.6;
+font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.35em;
+color:var(--gold);margin-bottom:1.2rem;opacity:.5;
 }
 .code-box-code{
-font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,4vw,2rem);
-letter-spacing:.15em;color:var(--cream);margin-bottom:.8rem;
+font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,4vw,2.2rem);
+letter-spacing:.2em;color:var(--cream);margin-bottom:1rem;
+position:relative;
 }
 .code-box-validity{
 font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
-font-size:.85rem;color:rgba(250,243,224,.35);
+font-size:.85rem;color:rgba(250,243,224,.3);
 }
 .cta-btn{
-display:inline-block;margin-top:2.5rem;padding:.9em 2.4em;
-font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.25em;
-color:var(--charcoal);text-decoration:none;border-radius:4px;
+display:inline-flex;align-items:center;gap:.6em;
+margin-top:3rem;padding:1em 2.8em;
+font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.3em;
+color:var(--charcoal);text-decoration:none;border-radius:6px;
 background:linear-gradient(110deg,var(--gold) 0%,var(--gold-light) 40%,var(--gold) 50%,var(--gold-light) 60%,var(--gold) 100%);
-background-size:200% 200%;animation:shimmer 3s ease-in-out infinite;
-transition:transform .2s;
+background-size:250% 250%;animation:shimmer 4s ease-in-out infinite;
+transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s;
+box-shadow:0 4px 20px rgba(201,168,63,.2);
+font-weight:700;
 }
 @keyframes shimmer{0%{background-position:100% 50%}50%{background-position:0% 50%}100%{background-position:100% 50%}}
-@media(hover:hover){.cta-btn:hover{transform:scale(1.04)}}
+@media(hover:hover){.cta-btn:hover{
+transform:translateY(-2px) scale(1.03);
+box-shadow:0 8px 30px rgba(201,168,63,.3);
+}}
+
+/* === CAR SHOWCASE === */
+.car-showcase{
+width:100%;max-width:900px;position:relative;
+}
+.car-showcase-hint{
+font-family:'Bebas Neue',sans-serif;font-size:.55rem;letter-spacing:.3em;
+color:var(--gold);opacity:.3;margin-bottom:2rem;
+}
+.car-carousel{
+display:flex;gap:1.5rem;overflow-x:auto;scroll-snap-type:x mandatory;
+padding:1rem .5rem 2rem;
+-webkit-overflow-scrolling:touch;
+scrollbar-width:none;
+}
+.car-carousel::-webkit-scrollbar{display:none}
+.car-card{
+flex:0 0 280px;scroll-snap-align:center;
+border:1px solid var(--glass-border);border-radius:16px;
+background:linear-gradient(165deg,rgba(18,18,18,.95),rgba(12,12,12,.98));
+overflow:hidden;position:relative;
+transition:transform .5s cubic-bezier(.16,1,.3,1),border-color .5s,box-shadow .5s;
+cursor:default;
+}
+@media(hover:hover){.car-card:hover{
+transform:translateY(-6px) scale(1.02);
+border-color:rgba(201,168,63,.15);
+box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 40px rgba(220,0,0,.04);
+}}
+.car-card.recommended{border-color:rgba(201,168,63,.2)}
+.car-card.recommended::before{
+content:'RECOMMENDED';position:absolute;top:14px;right:14px;z-index:3;
+font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.2em;
+color:var(--charcoal);background:var(--gold);
+padding:.3em .8em;border-radius:3px;
+}
+.car-img-wrap{
+width:100%;aspect-ratio:16/10;overflow:hidden;position:relative;
+background:linear-gradient(180deg,rgba(20,20,20,1),rgba(10,10,10,1));
+}
+.car-img{
+width:100%;height:100%;object-fit:cover;
+transition:transform 8s cubic-bezier(.16,1,.3,1);
+filter:brightness(.9) contrast(1.05);
+}
+@media(hover:hover){.car-card:hover .car-img{transform:scale(1.08)}}
+.car-img-overlay{
+position:absolute;inset:0;
+background:linear-gradient(180deg,transparent 40%,rgba(10,10,10,.9) 100%);
+pointer-events:none;
+}
+.car-info{padding:1.4rem 1.5rem 1.6rem;position:relative}
+.car-name{
+font-family:'Playfair Display',serif;font-weight:700;font-size:1.2rem;
+color:var(--cream);margin-bottom:.3rem;
+}
+.car-specs{
+font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+font-size:.8rem;color:rgba(250,243,224,.4);margin-bottom:1rem;line-height:1.5;
+}
+.car-budget-tag{
+font-family:'Bebas Neue',sans-serif;font-size:.55rem;letter-spacing:.2em;
+color:var(--gold);opacity:.5;margin-bottom:.2rem;
+}
+.car-value{
+font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+font-size:.75rem;color:rgba(250,243,224,.3);margin-bottom:.6rem;
+}
+.car-seats{
+display:inline-flex;align-items:center;gap:.3rem;
+margin-top:.6rem;padding:.25em .6em;border-radius:3px;
+background:rgba(201,168,63,.06);border:1px solid rgba(201,168,63,.1);
+font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.15em;
+color:var(--gold);opacity:.7;
+}
+/* Carousel dots */
+.car-dots{
+display:flex;justify-content:center;gap:.5rem;margin-top:1.5rem;
+}
+.car-dot{
+width:6px;height:6px;border-radius:50%;
+background:rgba(250,243,224,.1);border:1px solid rgba(250,243,224,.08);
+transition:background .3s,transform .3s;cursor:pointer;
+}
+.car-dot.active{background:var(--gold);transform:scale(1.3);border-color:var(--gold)}
+/* Drag instruction */
+.drag-hint{
+display:flex;align-items:center;gap:.5rem;justify-content:center;
+margin-top:1.2rem;opacity:.2;
+}
+.drag-hint svg{animation:dragPulse 2s ease-in-out infinite}
+@keyframes dragPulse{0%,100%{transform:translateX(0);opacity:.5}50%{transform:translateX(8px);opacity:1}}
+.drag-hint-text{
+font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.25em;color:var(--cream);
+}
+@media(min-width:768px){
+.car-card{flex:0 0 300px}
+}
+@media(max-width:480px){
+.car-card{flex:0 0 260px}
+}
 
 /* === FOOTER === */
-.footer{padding:3rem 1.5rem 2rem;text-align:center}
-.footer-text{
-font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.4em;
-color:rgba(250,243,224,.15);margin-bottom:1rem;
+.footer{
+padding:4rem 1.5rem 2.5rem;text-align:center;
+border-top:1px solid rgba(255,255,255,.03);
 }
-.footer-tricolor{display:flex;width:40px;height:2px;margin:0 auto;border-radius:1px;overflow:hidden}
+.footer-logo{
+width:50px;height:50px;margin:0 auto 1.5rem;opacity:.08;
+}
+.footer-text{
+font-family:'Bebas Neue',sans-serif;font-size:.55rem;letter-spacing:.5em;
+color:rgba(250,243,224,.12);margin-bottom:1.2rem;
+}
+.footer-tricolor{display:flex;width:50px;height:2px;margin:0 auto;border-radius:1px;overflow:hidden}
 .footer-tricolor span{flex:1}
 .footer-tricolor span:nth-child(1){background:var(--italian-green)}
 .footer-tricolor span:nth-child(2){background:var(--italian-white)}
 .footer-tricolor span:nth-child(3){background:var(--italian-red)}
 
 /* === RESPONSIVE === */
-@media(min-width:768px){.section{padding:6rem 2rem}}
+@media(min-width:768px){
+.section{padding:8rem 2rem}
+.message-section{padding:10rem 2rem}
+}
 @media(max-width:480px){
-.code-box{padding:1.5rem 1.2rem}
+.code-box{padding:2rem 1.5rem}
 .gift-card-name{font-size:1.1rem}
+.car-card{flex:0 0 240px}
+.message-quote::before{font-size:3rem}
 }
 @media(max-width:360px){
-.hero-title-buon{font-size:3rem}
-.hero-title-compleanno{font-size:2.6rem}
+.hero-title-buon{font-size:3.2rem}
+.hero-title-compleanno{font-size:2.8rem}
 .gift-card-brand{display:none}
+}
+
+/* === NOISE TEXTURE === */
+body::after{
+content:'';position:fixed;inset:0;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+pointer-events:none;z-index:998;opacity:.5;
 }
 </style>
 </head>
 <body>
+
+<!-- Cursor glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
 
 <!-- Italian flag bar -->
 <div class="flag-bar"><span></span><span></span><span></span></div>
@@ -264,31 +528,32 @@ color:rgba(250,243,224,.15);margin-bottom:1rem;
 <!-- Gold particles -->
 <div class="particles" id="particles"></div>
 
+<!-- Ambient vertical lines -->
+<div class="ambient-lines" id="ambientLines"></div>
+
 <!-- Intro overlay -->
 <div class="intro-overlay" id="intro">
 <svg class="intro-emblem" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M60 8L104 32V88L60 112L16 88V32L60 8Z" stroke="#C9A83F" stroke-width="1.5" fill="none"/>
-<path d="M60 16L96 36V84L60 104L24 84V36L60 16Z" fill="#1a1a1a" stroke="#C9A83F" stroke-width=".5"/>
-<!-- Checkered flag motif -->
-<rect x="38" y="38" width="6" height="6" fill="#C9A83F" opacity=".5"/><rect x="50" y="38" width="6" height="6" fill="#C9A83F" opacity=".5"/>
-<rect x="44" y="44" width="6" height="6" fill="#C9A83F" opacity=".5"/><rect x="56" y="44" width="6" height="6" fill="#C9A83F" opacity=".5"/>
-<rect x="38" y="50" width="6" height="6" fill="#C9A83F" opacity=".5"/><rect x="50" y="50" width="6" height="6" fill="#C9A83F" opacity=".5"/>
-<rect x="62" y="38" width="6" height="6" fill="#C9A83F" opacity=".3"/><rect x="68" y="44" width="6" height="6" fill="#C9A83F" opacity=".3"/>
-<rect x="62" y="50" width="6" height="6" fill="#C9A83F" opacity=".3"/>
-<!-- Italian tricolor strip -->
-<rect x="42" y="62" width="12" height="3" rx="1" fill="#009246"/>
-<rect x="54" y="62" width="12" height="3" rx="1" fill="#F1F1F1"/>
-<rect x="66" y="62" width="12" height="3" rx="1" fill="#CE2B37"/>
-<!-- Shield accent lines -->
-<line x1="60" y1="72" x2="60" y2="80" stroke="#C9A83F" stroke-width=".5" opacity=".3"/>
-<line x1="55" y1="76" x2="65" y2="76" stroke="#C9A83F" stroke-width=".5" opacity=".3"/>
+<path d="M60 8L104 32V88L60 112L16 88V32L60 8Z" stroke="#C9A83F" stroke-width="1" fill="none" opacity=".6"/>
+<path d="M60 16L96 36V84L60 104L24 84V36L60 16Z" fill="#0a0a0a" stroke="#C9A83F" stroke-width=".5" opacity=".4"/>
+<rect x="38" y="38" width="6" height="6" fill="#C9A83F" opacity=".4"/><rect x="50" y="38" width="6" height="6" fill="#C9A83F" opacity=".4"/>
+<rect x="44" y="44" width="6" height="6" fill="#C9A83F" opacity=".4"/><rect x="56" y="44" width="6" height="6" fill="#C9A83F" opacity=".4"/>
+<rect x="38" y="50" width="6" height="6" fill="#C9A83F" opacity=".4"/><rect x="50" y="50" width="6" height="6" fill="#C9A83F" opacity=".4"/>
+<rect x="62" y="38" width="6" height="6" fill="#C9A83F" opacity=".2"/><rect x="68" y="44" width="6" height="6" fill="#C9A83F" opacity=".2"/>
+<rect x="62" y="50" width="6" height="6" fill="#C9A83F" opacity=".2"/>
+<rect x="42" y="64" width="12" height="2.5" rx="1" fill="#009246"/>
+<rect x="54" y="64" width="12" height="2.5" rx="1" fill="#F1F1F1"/>
+<rect x="66" y="64" width="12" height="2.5" rx="1" fill="#CE2B37"/>
+<line x1="60" y1="74" x2="60" y2="82" stroke="#C9A83F" stroke-width=".4" opacity=".2"/>
+<line x1="55" y1="78" x2="65" y2="78" stroke="#C9A83F" stroke-width=".4" opacity=".2"/>
 </svg>
+<div class="intro-line"></div>
 <div class="intro-title">MOTORSPORT MARANELLO</div>
 <div class="intro-subtitle">presents&#8230;</div>
 </div>
 
 <!-- Main page -->
-<div class="main-page">
+<div class="main-page" id="mainPage">
 
 <!-- Hero -->
 <section class="hero">
@@ -298,7 +563,7 @@ color:rgba(250,243,224,.15);margin-bottom:1rem;
 <span class="hero-title-compleanno">Compleanno</span>
 </h1>
 <div class="hero-divider"></div>
-<p class="hero-subtitle">Take a Ferrari for a drive through Italy</p>
+<p class="hero-subtitle">A Ferrari driving experience through Italy awaits</p>
 <div class="scroll-cue">
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A83F" stroke-width="1.5" stroke-linecap="round"><path d="M7 10l5 5 5-5"/></svg>
 <span class="scroll-cue-label">SCOPRI</span>
@@ -308,7 +573,8 @@ color:rgba(250,243,224,.15);margin-bottom:1rem;
 <!-- Gift Card -->
 <section class="section">
 <div class="section-label" data-anim>YOUR GIFT</div>
-<div class="gift-card" data-anim="card">
+<div class="section-divider" data-anim data-anim-delay="1"></div>
+<div class="gift-card" data-anim="card" data-anim-delay="2">
 <div class="gift-card-stripe">
 <svg class="gift-card-watermark" viewBox="0 0 120 120" fill="white" xmlns="http://www.w3.org/2000/svg">
 <path d="M60 8L104 32V88L60 112L16 88V32L60 8Z"/>
@@ -328,22 +594,168 @@ color:rgba(250,243,224,.15);margin-bottom:1rem;
 </div>
 </section>
 
-<!-- Video -->
+<!-- Choose Your Ferrari -->
 <section class="section">
+<div class="section-label" data-anim>CHOOSE YOUR FERRARI</div>
+<div class="section-divider" data-anim data-anim-delay="1"></div>
+<div class="car-showcase" data-anim data-anim-delay="2">
+<div class="car-showcase-hint">WITHIN YOUR GIFT CARD BUDGET</div>
+<div class="car-carousel" id="carCarousel">
+
+<!-- Ferrari Portofino -->
+<div class="car-card recommended">
+<div class="car-img-wrap">
+<img class="car-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Ferrari_Portofino_M_IMG_4351.jpg/600px-Ferrari_Portofino_M_IMG_4351.jpg" alt="Ferrari Portofino" loading="lazy">
+<div class="car-img-overlay"></div>
+</div>
+<div class="car-info">
+<div class="car-name">Ferrari Portofino</div>
+<div class="car-specs">3.9L V8 Twin-Turbo &middot; 600 CV &middot; Convertible</div>
+<div class="car-value">Valued at &euro;206,000</div>
+<div class="car-budget-tag">WITHIN YOUR GIFT CARD</div>
+<div class="car-seats">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+4 SEATS &middot; BRING MUM
+</div>
+</div>
+</div>
+
+<!-- Ferrari F12 Berlinetta -->
+<div class="car-card">
+<div class="car-img-wrap">
+<img class="car-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Ferrari_F12berlinetta_IMG_2941.jpg/600px-Ferrari_F12berlinetta_IMG_2941.jpg" alt="Ferrari F12 Berlinetta" loading="lazy">
+<div class="car-img-overlay"></div>
+</div>
+<div class="car-info">
+<div class="car-name">Ferrari F12 Berlinetta</div>
+<div class="car-specs">6.3L V12 Naturally Aspirated &middot; 740 CV</div>
+<div class="car-value">Valued at &euro;330,000</div>
+<div class="car-budget-tag">WITHIN YOUR GIFT CARD</div>
+<div class="car-seats">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+2 SEATS
+</div>
+</div>
+</div>
+
+<!-- Ferrari 488 Spider -->
+<div class="car-card">
+<div class="car-img-wrap">
+<img class="car-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/2018_Ferrari_488_GTB_4.jpg/600px-2018_Ferrari_488_GTB_4.jpg" alt="Ferrari 488 Spider" loading="lazy">
+<div class="car-img-overlay"></div>
+</div>
+<div class="car-info">
+<div class="car-name">Ferrari 488 Spider</div>
+<div class="car-specs">3.9L V8 Twin-Turbo &middot; 670 CV &middot; Spider</div>
+<div class="car-value">Valued at &euro;272,000</div>
+<div class="car-budget-tag">WITHIN YOUR GIFT CARD</div>
+<div class="car-seats">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+2 SEATS
+</div>
+</div>
+</div>
+
+<!-- Ferrari GTC4 Lusso -->
+<div class="car-card">
+<div class="car-img-wrap">
+<img class="car-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Ferrari_GTC4Lusso_IMG_4353.jpg/600px-Ferrari_GTC4Lusso_IMG_4353.jpg" alt="Ferrari GTC4 Lusso" loading="lazy">
+<div class="car-img-overlay"></div>
+</div>
+<div class="car-info">
+<div class="car-name">Ferrari GTC4 Lusso</div>
+<div class="car-specs">6.3L V12 &middot; 690 CV &middot; Grand Tourer</div>
+<div class="car-value">Valued at &euro;300,000</div>
+<div class="car-budget-tag">WITHIN YOUR GIFT CARD</div>
+<div class="car-seats">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+4 SEATS &middot; BRING MUM
+</div>
+</div>
+</div>
+
+<!-- Ferrari 458 Italia -->
+<div class="car-card">
+<div class="car-img-wrap">
+<img class="car-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Fort_Worth_June_2016_56_%28Ferrari%29_%28cropped%29.jpg/600px-Fort_Worth_June_2016_56_%28Ferrari%29_%28cropped%29.jpg" alt="Ferrari 458 Italia" loading="lazy">
+<div class="car-img-overlay"></div>
+</div>
+<div class="car-info">
+<div class="car-name">Ferrari 458 Italia</div>
+<div class="car-specs">4.5L V8 Naturally Aspirated &middot; 570 CV</div>
+<div class="car-value">Valued at &euro;230,000</div>
+<div class="car-budget-tag">WITHIN YOUR GIFT CARD</div>
+<div class="car-seats">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+2 SEATS
+</div>
+</div>
+</div>
+
+<!-- Ferrari California -->
+<div class="car-card">
+<div class="car-img-wrap">
+<img class="car-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/2013_Ferrari_California_4.3L_Hagerty_parking_lot_6.1.19.jpg/600px-2013_Ferrari_California_4.3L_Hagerty_parking_lot_6.1.19.jpg" alt="Ferrari California" loading="lazy">
+<div class="car-img-overlay"></div>
+</div>
+<div class="car-info">
+<div class="car-name">Ferrari California</div>
+<div class="car-specs">4.3L V8 &middot; 460 CV &middot; Grand Tourer</div>
+<div class="car-value">Valued at &euro;175,000</div>
+<div class="car-budget-tag">WITHIN YOUR GIFT CARD</div>
+<div class="car-seats">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+4 SEATS &middot; BRING MUM
+</div>
+</div>
+</div>
+
+<!-- Ferrari F430 -->
+<div class="car-card">
+<div class="car-img-wrap">
+<img class="car-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Ferrari_F430_-_Flickr_-_Alexandre_Pr%C3%A9vot_%284%29_%28cropped%29.jpg/600px-Ferrari_F430_-_Flickr_-_Alexandre_Pr%C3%A9vot_%284%29_%28cropped%29.jpg" alt="Ferrari F430" loading="lazy">
+<div class="car-img-overlay"></div>
+</div>
+<div class="car-info">
+<div class="car-name">Ferrari F430</div>
+<div class="car-specs">4.3L V8 &middot; 490 CV &middot; Berlinetta</div>
+<div class="car-value">Valued at &euro;155,000</div>
+<div class="car-budget-tag">WITHIN YOUR GIFT CARD</div>
+<div class="car-seats">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+2 SEATS
+</div>
+</div>
+</div>
+
+</div>
+<div class="car-dots" id="carDots"></div>
+<div class="drag-hint">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A83F" stroke-width="1.5" stroke-linecap="round"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+<span class="drag-hint-text">SWIPE TO EXPLORE</span>
+</div>
+</div>
+</section>
+
+<!-- Video -->
+<section class="section video-section">
 <div class="section-label" data-anim>THE EXPERIENCE</div>
-<div class="video-wrap" data-anim>
+<div class="section-divider" data-anim data-anim-delay="1"></div>
+<div class="video-wrap" data-anim="scale" data-anim-delay="2">
 <iframe src="https://www.youtube.com/embed/5hNleHdaqyw?rel=0&modestbranding=1&color=white" title="Motorsport Maranello Experience" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe>
 </div>
 </section>
 
 <!-- Message -->
-<section class="section">
-<p class="message-text" data-anim>Happy Birthday! Enjoy a <span class="red">Ferrari</span> drive through <span class="gold">Maranello</span> &#8212; book the Portofino so Mum can come too!</p>
+<section class="section message-section">
+<div class="message-quote" data-anim>
+<p class="message-text">Happy Birthday! Enjoy a <span class="red">Ferrari</span> drive through <span class="gold">Maranello</span> &#8212; book the Portofino so Mum can come too!</p>
+</div>
 </section>
 
 <!-- Code -->
-<section class="section">
-<div class="code-box" data-anim>
+<section class="section code-section">
+<div class="code-box" data-anim="scale">
 <div class="code-box-label">GIFT CARD CODE</div>
 <div class="code-box-code">EE86-15CE-D5A3-01BE</div>
 <div class="code-box-validity">Valid until 3 April 2027</div>
@@ -353,6 +765,9 @@ color:rgba(250,243,224,.15);margin-bottom:1rem;
 
 <!-- Footer -->
 <footer class="footer">
+<svg class="footer-logo" viewBox="0 0 120 120" fill="white" xmlns="http://www.w3.org/2000/svg">
+<path d="M60 8L104 32V88L60 112L16 88V32L60 8Z"/>
+</svg>
 <div class="footer-text">THE REAL DRIVING EXPERIENCE</div>
 <div class="footer-tricolor"><span></span><span></span><span></span></div>
 </footer>
@@ -361,19 +776,46 @@ color:rgba(250,243,224,.15);margin-bottom:1rem;
 
 <script>
 (function(){
-/* Particles */
+'use strict';
+
+/* === Particles === */
 var pc=document.getElementById('particles');
-for(var i=0;i<16;i++){
+for(var i=0;i<24;i++){
 var p=document.createElement('div');
 p.className='particle';
 p.style.left=Math.random()*100+'%';
-p.style.animationDuration=(8+Math.random()*12)+'s';
-p.style.animationDelay=(Math.random()*10)+'s';
-p.style.width=p.style.height=(2+Math.random()*2)+'px';
+p.style.animationDuration=(10+Math.random()*15)+'s';
+p.style.animationDelay=(Math.random()*12)+'s';
+var size=(1.5+Math.random()*2.5)+'px';
+p.style.width=size;
+p.style.height=size;
 pc.appendChild(p);
 }
 
-/* Scroll progress */
+/* === Ambient lines === */
+var al=document.getElementById('ambientLines');
+for(var j=0;j<6;j++){
+var line=document.createElement('div');
+line.className='ambient-line';
+line.style.left=(10+j*16)+'%';
+line.style.animationDuration=(15+Math.random()*10)+'s';
+line.style.animationDelay=(Math.random()*8)+'s';
+al.appendChild(line);
+}
+
+/* === Cursor glow (desktop only) === */
+if(window.matchMedia('(hover:hover)').matches){
+var glow=document.getElementById('cursorGlow');
+glow.style.display='block';
+document.addEventListener('mousemove',function(e){
+glow.style.left=e.clientX+'px';
+glow.style.top=e.clientY+'px';
+},{passive:true});
+}else{
+document.getElementById('cursorGlow').style.display='none';
+}
+
+/* === Scroll progress === */
 var bar=document.getElementById('scrollProgress');
 var ticking=false;
 window.addEventListener('scroll',function(){
@@ -388,11 +830,18 @@ ticking=true;
 }
 },{passive:true});
 
-/* Remove intro overlay from DOM after animation */
+/* === Intro overlay === */
 var intro=document.getElementById('intro');
-intro.addEventListener('animationend',function(){intro.style.display='none'});
+var mainPage=document.getElementById('mainPage');
+setTimeout(function(){
+intro.classList.add('fade-out');
+mainPage.classList.add('visible');
+},4200);
+intro.addEventListener('animationend',function(e){
+if(e.animationName==='overlayFade'){intro.style.display='none'}
+});
 
-/* IntersectionObserver for scroll reveals */
+/* === IntersectionObserver === */
 var els=document.querySelectorAll('[data-anim]');
 if('IntersectionObserver' in window){
 var obs=new IntersectionObserver(function(entries){
@@ -402,10 +851,53 @@ e.target.classList.add('visible');
 obs.unobserve(e.target);
 }
 });
-},{threshold:0.15});
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
 els.forEach(function(el){obs.observe(el)});
 }else{
 els.forEach(function(el){el.classList.add('visible')});
+}
+
+/* === Car carousel dots === */
+var carousel=document.getElementById('carCarousel');
+var dotsWrap=document.getElementById('carDots');
+if(carousel&&dotsWrap){
+var cards=carousel.querySelectorAll('.car-card');
+cards.forEach(function(_,i){
+var dot=document.createElement('div');
+dot.className='car-dot'+(i===0?' active':'');
+dot.addEventListener('click',function(){
+cards[i].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+});
+dotsWrap.appendChild(dot);
+});
+var dots=dotsWrap.querySelectorAll('.car-dot');
+var dotTicking=false;
+carousel.addEventListener('scroll',function(){
+if(!dotTicking){
+requestAnimationFrame(function(){
+var scrollLeft=carousel.scrollLeft;
+var cardWidth=cards[0].offsetWidth+24;
+var active=Math.round(scrollLeft/cardWidth);
+dots.forEach(function(d,i){d.classList.toggle('active',i===active)});
+dotTicking=false;
+});
+dotTicking=true;
+}
+},{passive:true});
+}
+
+/* === Smooth parallax on hero (desktop) === */
+if(window.matchMedia('(hover:hover)').matches){
+var heroTitle=document.querySelector('.hero-title');
+var heroBadge=document.querySelector('.hero-badge');
+window.addEventListener('scroll',function(){
+var scrollY=window.scrollY;
+if(scrollY<window.innerHeight){
+var factor=scrollY*0.3;
+heroTitle.style.transform='translateY('+factor+'px)';
+heroBadge.style.transform='translateY('+(factor*0.5)+'px)';
+}
+},{passive:true});
 }
 })();
 </script>
