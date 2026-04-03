@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Buon Compleanno!</title>
+<title>Buon Compleanno, Michael!</title>
 <meta property="og:title" content="Buon Compleanno! 🇮🇹">
 <meta property="og:description" content="A Ferrari driving experience awaits you in Maranello.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#DC0000">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,5 93,27.5 93,72.5 50,95 7,72.5 7,27.5' fill='%23DC0000'/><text x='50' y='65' font-size='45' text-anchor='middle' fill='%23C9A83F' font-family='serif' font-weight='bold'>F</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet">
@@ -47,10 +48,11 @@ will-change:left,top;
 
 /* === SCROLL PROGRESS BAR (bottom) === */
 .scroll-progress{
-position:fixed;bottom:0;left:0;height:2px;width:100%;z-index:1000;
-background:linear-gradient(90deg,var(--ferrari-red),var(--gold));
+position:fixed;bottom:0;left:0;height:3px;width:100%;z-index:1000;
+background:linear-gradient(90deg,var(--ferrari-red),var(--gold),var(--ferrari-red));
 transform:scaleX(0);transform-origin:left;
 will-change:transform;pointer-events:none;
+box-shadow:0 0 12px rgba(220,0,0,.4),0 0 4px rgba(201,168,63,.3);
 }
 
 /* === GOLD PARTICLES === */
@@ -129,11 +131,18 @@ min-height:100vh;min-height:100dvh;
 display:flex;flex-direction:column;align-items:center;justify-content:center;
 text-align:center;padding:2rem;position:relative;
 background:
-radial-gradient(ellipse at 30% 20%,rgba(220,0,0,.05) 0%,transparent 50%),
-radial-gradient(ellipse at 70% 80%,rgba(201,168,63,.04) 0%,transparent 50%),
+radial-gradient(ellipse at 30% 20%,rgba(220,0,0,.07) 0%,transparent 50%),
+radial-gradient(ellipse at 70% 80%,rgba(201,168,63,.05) 0%,transparent 50%),
 radial-gradient(ellipse at 50% 50%,rgba(10,10,10,1) 0%,var(--deep) 100%);
 overflow:hidden;
 }
+.hero::after{
+content:'';position:absolute;inset:0;
+background:radial-gradient(ellipse at 50% 45%,rgba(220,0,0,.04) 0%,transparent 55%);
+animation:heroPulse 6s ease-in-out infinite;
+pointer-events:none;
+}
+@keyframes heroPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
 .hero::before{
 content:'';position:absolute;inset:0;
 background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A83F' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
@@ -153,7 +162,7 @@ background:rgba(201,168,63,.03);
 .hero-title-buon{
 font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(4rem,12vw,8rem);
 color:var(--cream);line-height:.9;display:block;
-text-shadow:0 0 80px rgba(220,0,0,.15);
+text-shadow:0 0 80px rgba(220,0,0,.15),0 2px 4px rgba(0,0,0,.3);
 }
 .hero-title-compleanno{
 font-family:'Playfair Display',serif;font-weight:400;font-style:italic;
@@ -191,13 +200,17 @@ padding:6rem 1.5rem;
 display:flex;flex-direction:column;align-items:center;text-align:center;
 position:relative;
 }
+.section::before{
+content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+background:linear-gradient(90deg,transparent,rgba(201,168,63,.06),rgba(201,168,63,.06),transparent);
+}
 .section-label{
 font-family:'Bebas Neue',sans-serif;font-size:.65rem;letter-spacing:.4em;
 color:var(--gold);margin-bottom:2.5rem;opacity:.7;
 }
 .section-divider{
-width:40px;height:1px;margin:0 auto 3rem;
-background:linear-gradient(90deg,transparent,rgba(201,168,63,.3),transparent);
+width:60px;height:1px;margin:0 auto 3rem;
+background:linear-gradient(90deg,transparent,rgba(201,168,63,.4),transparent);
 }
 
 /* === SCROLL ANIM === */
@@ -226,7 +239,7 @@ transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s cubic-bezier(.1
 }
 @media(hover:hover){.gift-card:hover{
 transform:translateY(-8px) rotateX(2deg);
-box-shadow:0 35px 90px rgba(0,0,0,.7),0 0 0 1px rgba(201,168,63,.12),0 0 60px rgba(220,0,0,.05),inset 0 1px 0 rgba(255,255,255,.05);
+box-shadow:0 35px 90px rgba(0,0,0,.7),0 0 0 1px rgba(201,168,63,.18),0 0 80px rgba(220,0,0,.08),0 0 30px rgba(201,168,63,.06),inset 0 1px 0 rgba(255,255,255,.05);
 }}
 .gift-card-stripe{
 position:absolute;right:0;top:0;bottom:0;width:38%;
@@ -269,7 +282,7 @@ font-size:.9rem;color:rgba(255,255,255,.6);
 /* Holographic shimmer on card */
 .gift-card::after{
 content:'';position:absolute;inset:0;
-background:linear-gradient(105deg,transparent 40%,rgba(201,168,63,.03) 45%,rgba(255,255,255,.04) 50%,rgba(201,168,63,.03) 55%,transparent 60%);
+background:linear-gradient(105deg,transparent 38%,rgba(201,168,63,.05) 44%,rgba(255,255,255,.07) 50%,rgba(201,168,63,.05) 56%,transparent 62%);
 background-size:200% 200%;
 animation:cardShimmer 4s ease-in-out infinite;
 pointer-events:none;
@@ -289,7 +302,7 @@ position:relative;
 }
 .video-wrap::before{
 content:'';position:absolute;inset:-1px;border-radius:17px;
-background:linear-gradient(135deg,rgba(201,168,63,.15),transparent 50%,rgba(220,0,0,.1));
+background:linear-gradient(135deg,rgba(201,168,63,.2),transparent 40%,transparent 60%,rgba(220,0,0,.15));
 z-index:-1;
 }
 .video-wrap iframe{width:100%;height:100%;border:none}
@@ -301,12 +314,18 @@ background:
 radial-gradient(ellipse at 50% 50%,rgba(201,168,63,.02) 0%,transparent 70%);
 }
 .message-quote{
-position:relative;padding:0 2rem;
+position:relative;padding:0 3rem;
 }
 .message-quote::before{
 content:'\201C';position:absolute;top:-1.5rem;left:0;
-font-family:'Playfair Display',serif;font-size:4rem;
-color:var(--gold);opacity:.15;line-height:1;
+font-family:'Playfair Display',serif;font-size:4.5rem;
+color:var(--gold);opacity:.2;line-height:1;
+text-shadow:0 0 30px rgba(201,168,63,.1);
+}
+.message-quote::after{
+content:'\201D';position:absolute;bottom:-2.5rem;right:0;
+font-family:'Playfair Display',serif;font-size:4.5rem;
+color:var(--gold);opacity:.12;line-height:1;
 }
 .message-text{
 font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
@@ -348,7 +367,10 @@ color:var(--gold);margin-bottom:1.2rem;opacity:.5;
 font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,4vw,2.2rem);
 letter-spacing:.2em;color:var(--cream);margin-bottom:1rem;
 position:relative;
+text-shadow:0 0 20px rgba(250,243,224,.08);
+animation:codeGlow 3s ease-in-out infinite;
 }
+@keyframes codeGlow{0%,100%{text-shadow:0 0 20px rgba(250,243,224,.08)}50%{text-shadow:0 0 30px rgba(201,168,63,.15),0 0 60px rgba(201,168,63,.05)}}
 .code-box-validity{
 font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
 font-size:.85rem;color:rgba(250,243,224,.3);
@@ -361,13 +383,13 @@ color:var(--charcoal);text-decoration:none;border-radius:6px;
 background:linear-gradient(110deg,var(--gold) 0%,var(--gold-light) 40%,var(--gold) 50%,var(--gold-light) 60%,var(--gold) 100%);
 background-size:250% 250%;animation:shimmer 4s ease-in-out infinite;
 transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s;
-box-shadow:0 4px 20px rgba(201,168,63,.2);
+box-shadow:0 4px 20px rgba(201,168,63,.2),0 0 40px rgba(201,168,63,.08);
 font-weight:700;
 }
 @keyframes shimmer{0%{background-position:100% 50%}50%{background-position:0% 50%}100%{background-position:100% 50%}}
 @media(hover:hover){.cta-btn:hover{
 transform:translateY(-2px) scale(1.03);
-box-shadow:0 8px 30px rgba(201,168,63,.3);
+box-shadow:0 8px 30px rgba(201,168,63,.35),0 0 60px rgba(201,168,63,.12);
 }}
 
 /* === CAR SHOWCASE === */
@@ -393,17 +415,26 @@ overflow:hidden;position:relative;
 transition:transform .5s cubic-bezier(.16,1,.3,1),border-color .5s,box-shadow .5s;
 cursor:default;
 }
+.car-card::after{
+content:'';position:absolute;top:0;left:0;right:0;height:2px;
+background:linear-gradient(90deg,var(--ferrari-red),var(--gold));
+opacity:0;transition:opacity .5s;
+}
 @media(hover:hover){.car-card:hover{
 transform:translateY(-6px) scale(1.02);
 border-color:rgba(201,168,63,.15);
-box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 40px rgba(220,0,0,.04);
-}}
-.car-card.recommended{border-color:rgba(201,168,63,.2)}
+box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 40px rgba(220,0,0,.06),0 0 20px rgba(201,168,63,.04);
+}
+.car-card:hover::after{opacity:1}
+}
+.car-card.recommended{border-color:rgba(201,168,63,.2);box-shadow:0 0 30px rgba(201,168,63,.04)}
+.car-card.recommended::after{opacity:.6}
 .car-card.recommended::before{
 content:'RECOMMENDED';position:absolute;top:14px;right:14px;z-index:3;
 font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.2em;
-color:var(--charcoal);background:var(--gold);
+color:var(--charcoal);background:linear-gradient(135deg,var(--gold),var(--gold-light));
 padding:.3em .8em;border-radius:3px;
+box-shadow:0 2px 10px rgba(201,168,63,.25);
 }
 .car-img-wrap{
 width:100%;aspect-ratio:16/10;overflow:hidden;position:relative;
@@ -464,6 +495,31 @@ margin-top:1.2rem;opacity:.2;
 .drag-hint-text{
 font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.25em;color:var(--cream);
 }
+/* Car video link */
+.car-video-link{
+display:inline-flex;align-items:center;gap:.4rem;
+margin-top:.8rem;padding:.3em .7em;border-radius:4px;
+background:rgba(220,0,0,.08);border:1px solid rgba(220,0,0,.15);
+font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.15em;
+color:rgba(220,0,0,.7);text-decoration:none;
+transition:background .3s,border-color .3s,color .3s;
+}
+@media(hover:hover){.car-video-link:hover{
+background:rgba(220,0,0,.15);border-color:rgba(220,0,0,.3);color:var(--ferrari-red);
+}}
+.car-video-link svg{opacity:.6}
+/* More options link */
+.more-options{
+display:inline-flex;align-items:center;gap:.5em;
+margin-top:2.5rem;
+font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+font-size:1rem;color:var(--gold);text-decoration:none;
+opacity:.5;transition:opacity .3s;
+letter-spacing:.03em;
+border-bottom:1px solid rgba(201,168,63,.15);
+padding-bottom:.15em;
+}
+@media(hover:hover){.more-options:hover{opacity:.8}}
 @media(min-width:768px){
 .car-card{flex:0 0 300px}
 }
@@ -474,14 +530,16 @@ font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.25em;color:v
 /* === FOOTER === */
 .footer{
 padding:4rem 1.5rem 2.5rem;text-align:center;
-border-top:1px solid rgba(255,255,255,.03);
+border-top:1px solid rgba(201,168,63,.06);
+background:radial-gradient(ellipse at 50% 0%,rgba(201,168,63,.015) 0%,transparent 60%);
 }
 .footer-logo{
-width:50px;height:50px;margin:0 auto 1.5rem;opacity:.08;
+width:50px;height:50px;margin:0 auto 1.5rem;opacity:.1;
+filter:drop-shadow(0 0 20px rgba(201,168,63,.1));
 }
 .footer-text{
 font-family:'Bebas Neue',sans-serif;font-size:.55rem;letter-spacing:.5em;
-color:rgba(250,243,224,.12);margin-bottom:1.2rem;
+color:rgba(250,243,224,.15);margin-bottom:1.2rem;
 }
 .footer-tricolor{display:flex;width:50px;height:2px;margin:0 auto;border-radius:1px;overflow:hidden}
 .footer-tricolor span{flex:1}
@@ -617,6 +675,10 @@ pointer-events:none;z-index:998;opacity:.5;
 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
 4 SEATS &middot; BRING MUM
 </div>
+<a href="https://www.youtube.com/watch?v=gGCMbvHAaFY" class="car-video-link" target="_blank" rel="noopener">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3.5v9l6-4.5z"/></svg>
+WATCH VIDEO
+</a>
 </div>
 </div>
 
@@ -635,6 +697,10 @@ pointer-events:none;z-index:998;opacity:.5;
 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
 2 SEATS
 </div>
+<a href="https://www.youtube.com/watch?v=me8mNJe1vds" class="car-video-link" target="_blank" rel="noopener">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3.5v9l6-4.5z"/></svg>
+WATCH VIDEO
+</a>
 </div>
 </div>
 
@@ -653,6 +719,10 @@ pointer-events:none;z-index:998;opacity:.5;
 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
 2 SEATS
 </div>
+<a href="https://www.youtube.com/watch?v=5hNleHdaqyw" class="car-video-link" target="_blank" rel="noopener">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3.5v9l6-4.5z"/></svg>
+WATCH VIDEO
+</a>
 </div>
 </div>
 
@@ -671,6 +741,10 @@ pointer-events:none;z-index:998;opacity:.5;
 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
 4 SEATS &middot; BRING MUM
 </div>
+<a href="https://www.youtube.com/watch?v=3SSsrEMlH5I" class="car-video-link" target="_blank" rel="noopener">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3.5v9l6-4.5z"/></svg>
+WATCH VIDEO
+</a>
 </div>
 </div>
 
@@ -689,6 +763,10 @@ pointer-events:none;z-index:998;opacity:.5;
 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
 2 SEATS
 </div>
+<a href="https://www.youtube.com/watch?v=JEjJMnawClA" class="car-video-link" target="_blank" rel="noopener">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3.5v9l6-4.5z"/></svg>
+WATCH VIDEO
+</a>
 </div>
 </div>
 
@@ -707,6 +785,10 @@ pointer-events:none;z-index:998;opacity:.5;
 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
 4 SEATS &middot; BRING MUM
 </div>
+<a href="https://www.youtube.com/watch?v=vpIWnNPU0tg" class="car-video-link" target="_blank" rel="noopener">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3.5v9l6-4.5z"/></svg>
+WATCH VIDEO
+</a>
 </div>
 </div>
 
@@ -725,6 +807,10 @@ pointer-events:none;z-index:998;opacity:.5;
 <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
 2 SEATS
 </div>
+<a href="https://www.youtube.com/watch?v=d5GvU5-bBic" class="car-video-link" target="_blank" rel="noopener">
+<svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3.5v9l6-4.5z"/></svg>
+WATCH VIDEO
+</a>
 </div>
 </div>
 
@@ -734,6 +820,9 @@ pointer-events:none;z-index:998;opacity:.5;
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A83F" stroke-width="1.5" stroke-linecap="round"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
 <span class="drag-hint-text">SWIPE TO EXPLORE</span>
 </div>
+<a href="https://www.motorsportmaranello.com/test-drive-ferrari-lamborghini/" class="more-options" target="_blank" rel="noopener">
+More options available on their website &#8594;
+</a>
 </div>
 </section>
 
@@ -789,6 +878,7 @@ p.style.animationDelay=(Math.random()*12)+'s';
 var size=(1.5+Math.random()*2.5)+'px';
 p.style.width=size;
 p.style.height=size;
+if(i%5===0) p.style.background='#DC0000';
 pc.appendChild(p);
 }
 
